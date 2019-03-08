@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-compat/3.0.0-alpha1/jquery.min.js"></script>
+    <meta charset="utf-8" />
+    <title>JS Bin</title>
+    <style>
+      .window {
+        width: 300px;
+        height: 200px;
+        margin: 30px auto;
+        overflow: hidden;
+      }
+      .images {
+        position: relative;
+      }
+      .images img {
+        position: absolute;
+        top: 0;
+        transition: all 0.3s;
+      }
+      .leave {
+        transform: translateX(-100%);
+        z-index: 1;
+      }
+      .current {
+        transform: translateX(0);
+        z-index: 1;
+      }
+      .enter {
+        transform: translateX(100%);
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="window">
+      <div class="images" id="images">
+        <img src="https://i.ytimg.com/vi/ktlQrO2Sifg/maxresdefault.jpg" width="300" height="200" alt="" />
+        <img
+          src="https://cdn2.hercampus.com/hero-images/2019/01/12/maxresdefault.jpg"
+          width="300"
+          height="200"
+          alt=""
+        />
+        <img src="http://img.youtube.com/vi/m6J5fkzbKzE/maxresdefault.jpg" alt="" width="300" height="200" />
+        <img src="http://www.returnofkings.com/wp-content/uploads/2016/04/5.jpg" alt="" width="300" height="200" />
+      </div>
+    </div>
+  </body>
+  <script>
+    $(function() {
+      let n
+      init()
+      play()
+
+      function init() {
+        n = 1
+        $(`.images>img:nth-child(${n})`)
+          .addClass('current')
+          .siblings()
+          .addClass('enter')
+      }
+
+      function play() {
+        window.setInterval(function() {
+          makeLeave(getNode(n)).one('transitionend', function(e) {
+            makeEnter($(e.currentTarget))
+          })
+          makeCurrent(getNode(n + 1))
+          n += 1
+        }, 2000)
+      }
+
+      function getNode(n) {
+        return $(`.images>img:nth-child(${num(n)})`)
+      }
+
+      function num(n) {
+        if (n > 4) {
+          n = n % 4
+          if (n === 0) {
+            n = 4
+          }
+        }
+        return n
+      }
+
+      function makeCurrent($node) {
+        return $node.removeClass('enter').addClass('current')
+      }
+
+      function makeLeave($node) {
+        return $node.removeClass('current').addClass('leave')
+      }
+
+      function makeEnter($node) {
+        return $node.removeClass('leave').addClass('enter')
+      }
+    })
+  </script>
+</html>
